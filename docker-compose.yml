@@ -1,0 +1,80 @@
+name: git-it-got-it-good
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: git-it-got-it-good:production-hardened
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379/0"
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 512m
+    cpus: "1.00"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - git-manager-private
+
+  redis:
+    image: redis:7.4.1-alpine3.20
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - >
+        exec redis-server
+        --appendonly yes
+        --requirepass "$${REDIS_PASSWORD}"
+        --maxmemory 256mb
+        --maxmemory-policy allkeys-lru
+        --save 60 1000
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    volumes:
+      - redis-data:/data
+    expose:
+      - "6379"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" ping | grep PONG"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    networks:
+      - git-manager-private
+
+volumes:
+  redis-data:
+
+networks:
+  git-manager-private:
+    driver: bridge
+    internal: false
