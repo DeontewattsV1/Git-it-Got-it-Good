@@ -1,0 +1,18 @@
+{
+  "schema": "goodshyt.visual-release-assets.v1",
+  "product": {
+    "slug": "git-it-got-it-good",
+    "name": "Git-it-Got-it-Good",
+    "kicker": "GITHUB MCP INFRASTRUCTURE",
+    "tagline": "Read-only by default. Approval-gated writes.",
+    "accent": "#7EC8FF",
+    "accent2": "#4CE0B3",
+    "channels": ["MCP Registry", "Docker", "MiseOS"]
+  },
+  "source_assets": [
+    {"name": "readme-hero", "path": "docs/assets/product/readme-hero.svg", "width": 1600, "height": 480},
+    {"name": "launch-16x9", "path": "docs/assets/product/launch-16x9.svg", "width": 1600, "height": 900},
+    {"name": "codeart-demo", "path": "docs/assets/product/codeart-demo.html", "type": "interactive-html"}
+  ],
+  "release_pipeline": {"workflow": ".github/workflows/release-visual-assets.yml", "renders": ["svg", "png"], "archives": ["zip", "tar.gz"], "checksums": "SHA256SUMS", "attach_on": "release.published"}
+}
