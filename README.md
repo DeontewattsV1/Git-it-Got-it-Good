@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/product/readme-hero.svg" alt="Git-it-Got-it-Good — GitHub MCP infrastructure" width="100%" />
+</p>
+
 # Git-it-Got-it-Good
 
 <!-- badges -->
@@ -175,6 +179,16 @@ REQUIRE_APPROVAL_FOR_WRITES=true
 | [README_PRODUCTION.md](README_PRODUCTION.md) | Production deployment guide |
 | [.github/copilot-instructions.md](.github/copilot-instructions.md) | Agent task guidelines |
 | [docs/agent-rules.json](docs/agent-rules.json) | JSON task template |
+
+## 🎮 Visual assets & releases
+
+- [README hero](docs/assets/product/readme-hero.svg)
+- [16:9 launch graphic](docs/assets/product/launch-16x9.svg)
+- [Interactive CodeArt MCP trace demo](docs/assets/product/codeart-demo.html)
+- [Visual asset manifest](docs/assets/product/manifest.json)
+- [Release graphics workflow](.github/workflows/release-visual-assets.yml)
+
+Published GitHub Releases automatically receive rendered PNG copies of the SVG masters, `SHA256SUMS`, and ZIP/TAR visual bundles. Manual workflow runs produce the same package as a GitHub Actions artifact without creating a release.
 
 ## 🤝 Contributing
 
