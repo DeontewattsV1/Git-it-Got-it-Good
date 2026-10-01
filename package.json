@@ -8,11 +8,14 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.ts\"",
+    "test": "node --test tests/*.test.js",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "validate:pinned": "node scripts/verify-pinned-deps.mjs"
   },
   "dependencies": {
+    "@modelcontextprotocol/node": "2.1.0",
+    "@modelcontextprotocol/server": "2.2.0",
     "@octokit/auth-app": "7.1.1",
     "@octokit/rest": "21.0.2",
     "express": "5.2.1",
@@ -21,7 +24,7 @@
     "ioredis": "5.4.1",
     "pino": "9.5.0",
     "pino-http": "10.3.0",
-    "zod": "3.23.8"
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@types/express": "5.0.0",
