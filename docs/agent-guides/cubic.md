@@ -1,6 +1,6 @@
 # Cubic Agent Review Guide
 
-This repository treats Cubic as a review-intelligence layer beneath repository policy, tests, CI, and human approval.
+This repository treats Cubic as a review-intelligence layer beneath repository policy, tests, CI, security gates, and explicit human merge authority.
 
 ## Prerequisites
 
@@ -10,7 +10,9 @@ Use the capabilities appropriate to the workflow:
 - Pull-request comments and review loops: install/sign in to GitHub CLI and work from a local checkout.
 - Wiki, codebase scans, and review learnings: connect Cubic's MCP server with OAuth for an account that can access this repository.
 - Agent skills: install Cubic's skills for the coding agent, for example:
-  `npx @cubic-plugin/cubic-plugin install --to codex --skills-only`
+  `npx @cubic-plugin/cubic-plugin@1.5.0 install --to codex --skills-only`
+
+Keep the installer pinned to this exact version. Review the package source and release changes before updating the pin in a pull request; do not substitute a floating version or tag.
 
 The skills-only installer intentionally leaves MCP configuration unchanged.
 
