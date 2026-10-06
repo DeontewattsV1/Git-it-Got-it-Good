@@ -2,7 +2,12 @@ import type { Octokit } from '@octokit/rest';
 import { AppError } from '../utils/errors.js';
 
 export async function readFile(octokit: Octokit, owner: string, repo: string, path: string, ref?: string) {
-  const response = await octokit.repos.getContent({ owner, repo, path, ref });
+  const response = await octokit.repos.getContent({
+    owner,
+    repo,
+    path,
+    ...(ref ? { ref } : {})
+  });
   if (Array.isArray(response.data) || response.data.type !== 'file') {
     throw new AppError(`Path is not a file: ${path}`, 404, 'NOT_A_FILE');
   }
