@@ -11,6 +11,7 @@ on:
         type: string
 
 permissions:
+  # Packaging is read-only; release mutation is isolated below.
   contents: read
 
 jobs:
