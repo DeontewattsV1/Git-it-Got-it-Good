@@ -15,7 +15,14 @@ function jsonResult(data: unknown) {
 }
 
 function authorizeRead(context: AuthContext, tool: string, action: GitHubAction, target?: string) {
-  auditDecision({ subject: context.subject, tool, action, riskLevel: 'low', target, allowed: true });
+  auditDecision({
+    subject: context.subject,
+    tool,
+    action,
+    riskLevel: 'low',
+    allowed: true,
+    ...(target ? { target } : {})
+  });
 }
 
 export function createGitManagerMcpServer(context: AuthContext): McpServer {

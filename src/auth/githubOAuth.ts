@@ -48,8 +48,8 @@ function validateRedirectUri(value: string): string {
 }
 
 export async function registerOAuthClient(req: Request, res: Response) {
-  const raw = Array.isArray(req.body?.redirect_uris) ? req.body.redirect_uris : [];
-  const redirectUris = raw
+  const raw: unknown[] = Array.isArray(req.body?.redirect_uris) ? req.body.redirect_uris : [];
+  const redirectUris: string[] = raw
     .filter((uri: unknown): uri is string => typeof uri === 'string')
     .map(validateRedirectUri);
   if (redirectUris.length === 0) {
@@ -71,9 +71,11 @@ async function getOAuthClient(clientId: string): Promise<OAuthClientRecord | und
   if (config.CHATGPT_OAUTH_CLIENT_ID && clientId === config.CHATGPT_OAUTH_CLIENT_ID) {
     return {
       clientId,
-      clientSecret: config.CHATGPT_OAUTH_CLIENT_SECRET || undefined,
       redirectUris: config.CHATGPT_REDIRECT_URIS.map(validateRedirectUri),
-      createdAt: 'static'
+      createdAt: 'static',
+      ...(config.CHATGPT_OAUTH_CLIENT_SECRET
+        ? { clientSecret: config.CHATGPT_OAUTH_CLIENT_SECRET }
+        : {})
     };
   }
   return authStore.getClient(clientId);
@@ -157,9 +159,9 @@ export async function githubCallback(req: Request, res: Response) {
     clientId: localState.clientId,
     redirectUri: localState.redirectUri,
     githubAccessToken: tokenJson.access_token,
-    githubLogin,
     scopes: tokenJson.scope?.split(',').map((scope) => scope.trim()).filter(Boolean) ?? [],
-    codeChallenge: localState.codeChallenge
+    codeChallenge: localState.codeChallenge,
+    ...(githubLogin ? { githubLogin } : {})
   });
 
   const redirect = new URL(localState.redirectUri);
@@ -196,8 +198,8 @@ export async function token(req: Request, res: Response) {
   const session = await authStore.createSession({
     subject: code.githubLogin ?? clientId,
     githubAccessToken: authStore.decryptAuthorizationCodeToken(code),
-    githubLogin: code.githubLogin,
-    scopes: code.scopes
+    scopes: code.scopes,
+    ...(code.githubLogin ? { githubLogin: code.githubLogin } : {})
   });
 
   return res.json({

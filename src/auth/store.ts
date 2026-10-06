@@ -1,5 +1,5 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import { config } from '../config.js';
 import type { AuthContext } from '../types.js';
 
@@ -167,10 +167,10 @@ export class AuthStore {
       clientId: input.clientId,
       redirectUri: input.redirectUri,
       encryptedGithubAccessToken: encrypt(input.githubAccessToken),
-      githubLogin: input.githubLogin,
       scopes: input.scopes,
       codeChallenge: input.codeChallenge,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      ...(input.githubLogin ? { githubLogin: input.githubLogin } : {})
     };
     await this.backend.set(`oauth:code:${code.code}`, code, config.OAUTH_CODE_TTL_SECONDS);
     return code;
@@ -191,10 +191,10 @@ export class AuthStore {
     const record: SessionRecord = {
       tokenHash: tokenHash(token),
       encryptedGithubAccessToken: encrypt(input.githubAccessToken),
-      githubLogin: input.githubLogin,
       subject: input.subject,
       scopes: input.scopes,
-      expiresAt
+      expiresAt,
+      ...(input.githubLogin ? { githubLogin: input.githubLogin } : {})
     };
     await this.backend.set(`session:${record.tokenHash}`, record, config.SESSION_TTL_SECONDS);
     return { token, expiresAt };
@@ -206,8 +206,8 @@ export class AuthStore {
     return {
       subject: record.subject,
       githubAccessToken: decrypt(record.encryptedGithubAccessToken),
-      githubLogin: record.githubLogin,
-      scopes: record.scopes
+      scopes: record.scopes,
+      ...(record.githubLogin ? { githubLogin: record.githubLogin } : {})
     };
   }
 
