@@ -29,8 +29,8 @@ app.use((req, _res, next) => {
   return next();
 });
 
-const authLimiter = rateLimit({ windowMs: 60_000, limit: 60, standardHeaders: 'draft-8', legacyHeaders: false });
-const mcpLimiter = rateLimit({ windowMs: 60_000, limit: 240, standardHeaders: 'draft-8', legacyHeaders: false });
+const authLimiter = rateLimit({ windowMs: 60_000, limit: 60, standardHeaders: 'draft-6', legacyHeaders: false });
+const mcpLimiter = rateLimit({ windowMs: 60_000, limit: 240, standardHeaders: 'draft-6', legacyHeaders: false });
 
 function asyncRoute(handler: (req: Request, res: Response, next: NextFunction) => Promise<unknown>) {
   return (req: Request, res: Response, next: NextFunction) => { void handler(req, res, next).catch(next); };
